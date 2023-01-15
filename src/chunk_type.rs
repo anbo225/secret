@@ -1,6 +1,7 @@
 use core::fmt;
 use std::str::FromStr;
 
+#[derive(Debug)]
 pub struct ChunkType(u8, u8, u8, u8);
 
 impl ChunkType {
@@ -26,7 +27,7 @@ impl FromStr for ChunkType{
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let value = s.as_bytes();
-        ChunkType::try_from( value)
+        ChunkType::try_from( <[u8;4]>::try_from(value).unwrap())
     }
 }
 
