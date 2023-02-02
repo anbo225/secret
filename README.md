@@ -2,9 +2,9 @@
 
 ## Intro
 
-A simple tool to hide secret message in a png file. 
+A simple tool to hide secret messages in a png file. 
 
-With the help of [this great article](https://picklenerd.github.io/pngme_book), I develop this tool to learn rust.
+Just develop this tool to learn rust with the help of [this great article](https://picklenerd.github.io/pngme_book).
 
 
 ## How to install
