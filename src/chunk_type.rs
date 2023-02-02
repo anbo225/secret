@@ -1,16 +1,15 @@
 use core::fmt;
 use std::str::FromStr;
 
-const SHIFT : u8 = 1<< 5;
+const SHIFT: u8 = 1 << 5;
 
-#[derive(Debug)]
-#[derive(PartialEq)]
-pub struct ChunkType{
+#[derive(Debug, PartialEq)]
+pub struct ChunkType {
     bytes: [u8; 4],
 }
 
 impl ChunkType {
-    pub fn bytes(&self) -> [u8; 4] {   
+    pub fn bytes(&self) -> [u8; 4] {
         self.bytes
     }
 
@@ -27,7 +26,7 @@ impl ChunkType {
     }
 
     fn is_reserved_bit_valid(&self) -> bool {
-        self.bytes[2]  & SHIFT == 0 
+        self.bytes[2] & SHIFT == 0
     }
 
     fn is_safe_to_copy(&self) -> bool {
@@ -35,19 +34,18 @@ impl ChunkType {
     }
 }
 
-
 impl fmt::Display for ChunkType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", String::from_utf8(self.bytes.to_vec()).unwrap())
     }
 }
 
-impl FromStr for ChunkType{
+impl FromStr for ChunkType {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let value = s.as_bytes();
-        ChunkType::try_from( <[u8;4]>::try_from(value).unwrap())
+        ChunkType::try_from(<[u8; 4]>::try_from(value).unwrap())
     }
 }
 
@@ -61,12 +59,9 @@ impl TryFrom<[u8; 4]> for ChunkType {
                 _ => return Err("invalid chunk type"),
             }
         }
-        Ok(ChunkType{bytes: value})
+        Ok(ChunkType { bytes: value })
     }
 }
-
-
-
 
 #[cfg(test)]
 mod tests {
@@ -166,4 +161,3 @@ mod tests {
         let _are_chunks_equal = chunk_type_1 == chunk_type_2;
     }
 }
-

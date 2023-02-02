@@ -13,7 +13,21 @@ pub enum PngError {
     ChunksInvalid,
     HeaderInValid,
     ChunkNotFound(String),
+    PngFileOpenFail(PathBuf),
 }
+
+impl error::Error for PngError {}
+
+impl fmt::Display for PngError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+      match self {
+        PngError::ChunksInvalid => write!(f, "Invalid ChunksBytes",),
+        PngError::HeaderInValid => write!(f, "Invalid header bytes",),
+        PngError::ChunkNotFound(chunk_type) => write!(f, "The chunk {} is not found", chunk_type),
+        PngError::PngFileOpenFail(file_path) => write!(f, "It's fail to open {:?}", file_path.to_str()),
+      }
+    }
+  }
 
 impl Png {
     pub const STANDARD_HEADER: [u8; 8] = [137, 80, 78, 71, 13, 10, 26, 10];
@@ -24,6 +38,11 @@ impl Png {
             chunks: (chunks),
         }
     }
+
+    pub fn from_file(file_path: PathBuf) -> result::Result<Png, PngError> {
+        let bytes = fs::read(&file_path).map_err(|_| PngError::PngFileOpenFail(file_path))?;
+        Png::try_from(bytes.as_slice())
+      }
 
     pub fn append_chunk(&mut self, chunk: Chunk) {
         self.chunks.push(chunk)
